@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ปรับ Title ให้สะท้อนว่าเป็นแผนหลักฉบับล่าสุด -->
+    <title>แผนโครงการเกษตรผสมผสาน 10 ปี (ฉบับล่าสุด)</title>
+    <!-- Chosen Palette: Earthy Neutrals (Beige, Brown, Green) -->
+    <!-- Application Structure Plan: SPA designed with 3 main "Phase" sections. Replaces old synergy diagram with strategic blocks for the new "Part-Time + Na Cafe" model. Uses JS for Chart.js budget/cashflow visualizations. -->
+    <!-- Visualization & Content Choices: [Budget Chart: Report Data -> Goal: Compare -> Viz: Chart.js Doughnut -> Justification: Shows initial capital allocation, NO SVG.][Timeline: Report Text -> Goal: Organize -> Viz: HTML/CSS Grid -> Justification: Clear breakdown of 10-year plan.][Cash Flow Charts: Report Data -> Goal: Change -> Viz: Chart.js Bar Charts -> Justification: Visualizes revenue growth per phase, NO SVG.][Labor Analysis: Report Text -> Goal: Inform -> Viz: HTML Cards -> Justification: Details new "Part-Time" workload.] -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;700&family=Azeret+Mono:wght@400;500;700&family=Bai+Jamjuree:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-dominant: #fdfaf6; /* Lighter beige */
+            --bg-secondary: #f4f0e6; /* Light beige */
+            --text-dark: #4b382a; /* Dark brown */
+            --header-dark: #283618; /* Dark olive */
+            --header-light: #606c38; /* Olive */
+            --accent: #dda15e; /* Terracotta */
+            --accent-brown: #a68a64; /* Muted brown */
+            --success-text: #166534; /* Dark green for success */
+        }
+        body {
+            font-family: 'Bai Jamjuree', 'Arimo', sans-serif;
+            background-color: var(--bg-dominant);
+            color: var(--text-dark);
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Azeret Mono', monospace;
+            color: var(--header-dark);
+            font-weight: 700;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px; /* Default height */
+            max-height: 400px;
+        }
+        .bar-chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 450px;
+        }
+        .phase-card {
+            background-color: #ffffff;
+            border: 1px solid var(--bg-secondary);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        }
+        .phase-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            border-color: var(--accent-brown);
+        }
+        .timeline-item {
+            position: relative;
+            padding-bottom: 2rem;
+            padding-left: 2.5rem;
+            border-left: 4px solid var(--bg-secondary);
+        }
+        .timeline-item:last-child {
+            border-left-color: transparent;
+            padding-bottom: 0;
+        }
+        .timeline-dot {
+            position: absolute;
+            left: -11px;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            background-color: var(--accent);
+            border-radius: 50%;
+            border: 4px solid var(--bg-dominant);
+        }
+        .tag {
+            display: inline-block;
+            background-color: var(--bg-secondary);
+            color: var(--header-light);
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-family: 'Azeret Mono', monospace;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        .stat-card {
+            background-color: var(--bg-secondary);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid var(--accent-brown);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto max-w-6xl p-4 md:p-12">
+
+        <header class="text-center my-12">
+            <!-- ปรับ H1 ให้ตรงกับ Title -->
+            <h1 class="text-5xl md:text-6xl font-bold mb-4">แผนโครงการเกษตร 10 ปี (ฉบับล่าสุด)</h1>
+            <p class="text-xl md:text-2xl" style="color: var(--header-light);">
+                โมเดล Part-Time (18 ชม./สัปดาห์) + ธุรกิจนาคาเฟ่
+            </p>
+        </header>
+
+        <!-- New Core Strategy Section -->
+        <section id="strategy" class="my-16">
+            <h2 class="text-4xl md:text-5xl text-center mb-10">กลยุทธ์หลัก (ฉบับปรับปรุง)</h2>
+            <p class="text-center text-lg max-w-3xl mx-auto mb-12" style="color: var(--header-light);">
+                แผนนี้ถูกออกแบบใหม่ทั้งหมดเพื่อรองรับข้อจำกัดด้านเวลา (18 ชม./สัปดาห์) โดยตัดการเลี้ยงสัตว์ที่ต้องดูแลทุกวันออก และเปลี่ยนไปเน้น "ระบบอัตโนมัติ" และ "ธุรกิจบริการ"
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="phase-card text-center">
+                    <div class="text-5xl mb-4" style="color: var(--accent);"><i class="fa-solid fa-clock"></i></div>
+                    <h3 class="text-2xl mb-2">ข้อจำกัด</h3>
+                    <p class="text-lg">ทำงาน 3 วัน/สัปดาห์</p>
+                    <p class="text-lg">(รวม 18 ชั่วโมง)</p>
+                </div>
+                <div class="phase-card text-center">
+                    <div class="text-5xl mb-4" style="color: var(--accent);"><i class="fa-solid fa-robot"></i></div>
+                    <h3 class="text-2xl mb-2">ทางออก</h3>
+                    <p class="text-lg">พึ่งพาระบบอัตโนมัติ</p>
+                    <p class="text-lg">(ระบบน้ำ, ตั้งเวลา)</p>
+                </div>
+                <div class="phase-card text-center">
+                    <div class="text-5xl mb-4" style="color: var(--accent);"><i class="fa-solid fa-tree"></i></div>
+                    <h3 class="text-2xl mb-2">โมเดลฟาร์ม</h3>
+                    <p class="text-lg">เน้นพืชระยะยาว</p>
+                    <p class="text-lg">(ส้มโอ, กล้วย, ข้าว)</p>
+                </div>
+                <div class="phase-card text-center">
+                    <div class="text-5xl mb-4" style="color: var(--accent);"><i class="fa-solid fa-mug-hot"></i></div>
+                    <h3 class="text-2xl mb-2">ตัวสร้างรายได้</h3>
+                    <p class="text-lg">ธุรกิจบริการ</p>
+                    <p class="text-lg">(นาคาเฟ่ & กิจกรรม)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Budget & Labor Overview -->
+        <section id="overview" class="my-16 p-8 rounded-lg" style="background-color: var(--bg-secondary);">
+            <h2 class="text-4xl md:text-5xl text-center mb-10">ภาพรวมงบประมาณและแรงงาน</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <h3 class="text-3xl mb-4">งบประมาณเริ่มต้น (ปีที่ 1)</h3>
+                    <p class="text-lg mb-4">ปรับเพิ่มงบสำหรับระบบอัตโนมัติ ซึ่งจำเป็นอย่างยิ่งสำหรับโมเดล Part-Time</p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="stat-card">
+                            <h4 class="text-xl font-semibold" style="color: var(--header-light);">ทุนเริ่มต้น (เดิม)</h4>
+                            <p class="text-4xl font-bold my-2">450,000</p>
+                            <p class="text-lg">บาท</p>
+                        </div>
+                        <div class="stat-card">
+                            <h4 class="text-xl font-semibold" style="color: var(--header-light);">ทุนเริ่มต้น (ใหม่)</h4>
+                            <p class="text-4xl font-bold my-2" style="color: var(--header-dark);">505,000</p>
+                            <p class="text-lg">บาท (+55,000)</p>
+                        </div>
+                    </div>
+                     <p class="text-lg mt-4"><strong><i class="fa-solid fa-circle-info mr-2"></i>หมายเหตุ:</strong> งบ 55,000 ที่เพิ่มขึ้น คือค่าระบบให้น้ำอัตโนมัติ (Timer, Solenoid Valves, Drip System)</p>
+                </div>
+                <div>
+                    <h3 class="text-3xl mb-4">การจัดสรรงบเริ่มต้น</h3>
+                    <div class="chart-container">
+                        <canvas id="budgetChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <hr class="my-10" style="border-top: 2px solid var(--accent-brown);">
+
+            <div>
+                <h3 class="text-3xl mb-4 text-center">การประมาณการแรงงาน (Workload)</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="phase-card">
+                        <h4 class="text-2xl mb-3"><span class="tag">ระยะที่ 1 (ปี 1-2)</span></h4>
+                        <p class="text-lg"><strong><i class="fa-solid fa-user mr-2"></i>1 คน (Part-Time)</strong></p>
+                        <p class="text-lg"><strong><i class="fa-solid fa-clock mr-2"></i>18 ชั่วโมง / สัปดาห์</strong></p>
+                        <p class="mt-2">ทำงานดูแลระบบ, บำรุงรักษาสวนส้มโอ/กล้วย, จัดการจ้างเหมา (ข้าว)</p>
+                    </div>
+                    <div class="phase-card">
+                        <h4 class="text-2xl mb-3"><span class="tag">ระยะที่ 2 (ปี 3-7)</span></h4>
+                        <p class="text-lg"><strong><i class="fa-solid fa-user mr-2"></i>1 คน (Full-Time)</strong></p>
+                        <p class="text-lg"><strong><i class="fa-solid fa-clock mr-2"></i>~40-48 ชั่วโมง / สัปดาห์</strong></p>
+                        <p class="mt-2">เปลี่ยนเป็น Full-Time เพื่อบริหาร "นาคาเฟ่" (ศ-อา) และดูแลฟาร์มในวันธรรมดา</p>
+                    </div>
+                    <div class="phase-card">
+                        <h4 class="text-2xl mb-3"><span class="tag">ระยะที่ 3 (ปี 8-10)</span></h4>
+                        <p class="text-lg"><strong><i class="fa-solid fa-users mr-2"></i>1-2 คน (Full-Time)</strong></p>
+                        <p class="text-lg"><strong><i class="fa-solid fa-clock mr-2"></i>~40-60 ชั่วโมง / สัปดาห์</strong></p>
+                        <p class="mt-2">เมื่อส้มโอเริ่มให้ผลผลิต อาจต้องจ้างผู้ช่วยเพิ่ม 1 คน สำหรับดูแลคาเฟ่/กิจกรรม</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Phased Workflow Section -->
+        <section id="workflow" class="my-16">
+            <h2 class="text-4xl md:text-5xl text-center mb-10">ไทม์ไลน์และกระแสเงินสด 10 ปี</h2>
+            <p class="text-center text-lg max-w-3xl mx-auto mb-12" style="color: var(--header-light);">
+                รายละเอียดกิจกรรม, การลงทุน, และประมาณการรายได้ในแต่ละระยะของแผน
+            </p>
+
+            <!-- Phase 1 -->
+            <div class="phase-card mb-8">
+                <h3 class="text-4xl mb-6">ระยะที่ 1 (ปี 1-2): วางรากฐาน Part-Time</h3>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="text-2xl mb-4" style="color: var(--header-light);">ไทม์ไลน์กิจกรรม (ปี 1)</h4>
+                        <div class="relative">
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <h5 class="text-xl font-semibold">เดือน 1-3: ลงทุนโครงสร้างหลัก</h5>
+                                <p>ขุดสระ/เจาะบาดาล, ติดตั้งระบบน้ำอัตโนมัติ (55k), ลงเสาสำหรับส้มโอ</p>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <h5 class="text-xl font-semibold">เดือน 4-5: ลงพืชหลัก</h5>
+                                <p>ปลูกส้มโอ 5 ไร่ (40k), ปลูกกล้วย/มะละกอรอบสระ (14k)</p>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <h5 class="text-xl font-semibold">เดือน 6-8: จ้างเหมาและเสริม</h5>
+                                <p>จ้างเหมาทำนาข้าวหอมมะลิ (40k), ปล่อยปลาธรรมชาติ (10k)</p>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <h5 class="text-xl font-semibold">เดือน 9-12: บำรุงรักษา & เริ่มคืนทุน</h5>
+                                <p>ดูแลสวน (ด้วยระบบน้ำอัตโนมัติ), กล้วย/มะละกอเริ่มให้ผลผลิต</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-2xl mb-4" style="color: var(--header-light);">กระแสเงินสด ระยะที่ 1 (ประมาณการต่อเดือน/ปี)</h4>
+                        <div class="p-6 rounded-lg" style="background-color: var(--bg-dominant);">
+                            <h5 class="text-xl font-semibold mb-2">รายได้หมุนเวียน (รายเดือน)</h5>
+                            <p class="text-lg"><strong>กล้วย/มะละกอ (เริ่มปลายปี):</strong> <strong style="color: var(--success-text);">~2,000 บ./เดือน</strong></p>
+                        </div>
+                        <div class="p-6 rounded-lg mt-4" style="background-color: var(--bg-dominant);">
+                            <h5 class="text-xl font-semibold mb-2">รายได้ก้อน (รายปี)</h5>
+                            <p class="text-lg"><strong>ข้าวเปลือกหอมมะลิ (10 ไร่):</strong> 5.5 ตัน @ 15,200 บ. = 83,600 บ.</p>
+                            <p class="text-lg"><strong>หัก ต้นทุน (จ้างเหมา ~40,000 บ.):</strong> <strong style="color: var(--success-text);">กำไรสุทธิ ~43,600 บ./ปี</strong></p>
+                            <p class="text-lg"><strong>ปลาธรรมชาติ (จับขายปลายปี):</strong> <strong style="color: var(--success-text);">~10,000 บ./ปี</strong></p>
+                        </div>
+                        <p class="text-center text-lg font-semibold mt-6 p-4 rounded" style="background-color: var(--bg-secondary);">
+                            สรุป (ปีที่ 1): ฟาร์มมีกระแสเงินสด <strong style="color: var(--success-text);">~2,000 บ./เดือน</strong> และ <strong style="color: var(--success-text);">~53,600 บ./ปี</strong>
+                            <br>
+                            <strong class="text-red-700">กระแสเงินสดนี้ใช้สำหรับค่าบำรุงรักษา และเป็นส่วนหนึ่งของทุนสร้างคาเฟ่ในปีที่ 2</strong>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase 2 -->
+            <div class="phase-card mb-8">
+                <h3 class="text-4xl mb-6">ระยะที่ 2 (ปี 3-7): เปลี่ยนสู่ธุรกิจบริการ</h3>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="text-2xl mb-4" style="color: var(--header-light);">ไทม์ไลน์กิจกรรม (เริ่มต้นปี 2)</h4>
+                        <div class="relative">
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <h5 class="text-xl font-semibold">ลงทุน "นาคาเฟ่" (170,000 บ.)</h5>
+                                <p>ใช้กำไรสะสมปี 1 (~53,600 บ.) + <strong class="text-red-700">ลงทุนใหม่ ~116,400 บ.</strong></p>
+                                <ul class="list-disc list-inside ml-4">
+                                    <li>โครงสร้าง/ตกแต่ง: 100,000 บ.</li>
+                                    <li>อุปกรณ์เครื่องดื่ม: 50,000 บ.</li>
+                                    <li>สต็อกเริ่มต้น: 20,000 บ.</li>
+                                </ul>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <h5 class="text-xl font-semibold">เปลี่ยนสถานะเป็น Full-Time</h5>
+                                <p>เจ้าของโครงการต้องเปลี่ยนมาทำ Full-Time เพื่อบริหารคาเฟ่ (ศ-อา) และดูแลฟาร์ม (จ-อ)</p>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <h5 class="text-xl font-semibold">ต่อยอดมูลค่าเพิ่ม (Value-Add)</h5>
+                                <p>เพิ่มกิจกรรม (พายเรือ, ดำนา), ขายสินค้าแปรรูป (กล้วยตาก), และเมนู Farm-to-Table</p>
+                            </div>
+                        </div>
+                        <!-- Value Add Section -->
+                        <div class="mt-6">
+                            <h4 class="text-2xl mb-4" style="color: var(--header-light);">การต่อยอดมูลค่าเพิ่ม "นาคาเฟ่"</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="p-4 rounded-lg" style="background-color: var(--bg-dominant);">
+                                    <h5 class="text-lg font-semibold"><i class="fa-solid fa-store mr-2"></i>Farm-to-Cafe & Stand</h5>
+                                    <p>เมนูจากกล้วย/มะละกอ, ขายข้าวสารแบรนด์ตัวเอง, ขายผลผลิตสด</p>
+                                </div>
+                                <div class="p-4 rounded-lg" style="background-color: var(--bg-dominant);">
+                                    <h5 class="text-lg font-semibold"><i class="fa-solid fa-person-chalkboard mr-2"></i>Workshops & Tours</h5>
+                                    <p>คอร์สแปรรูป (กล้วยตาก), ทัวร์ฟาร์ม (โชว์ระบบอัตโนมัติ), กิจกรรมดำนา</p>
+                                </div>
+                                <div class="p-4 rounded-lg" style="background-color: var(--bg-dominant);">
+                                    <h5 class="text-lg font-semibold"><i class="fa-solid fa-camera-retro mr-2"></i>Space Rental</h5>
+                                    <p>เช่าพื้นที่ถ่าย Pre-Wedding, จัดเลี้ยงกลุ่มเล็กในวันธรรมดา</p>
+                                </div>
+                                <div class="p-4 rounded-lg" style="background-color: var(--bg-dominant);">
+                                    <h5 class="text-lg font-semibold"><i class="fa-solid fa-house-chimney mr-2"></i>Accommodation (อนาคต)</h5>
+                                    <p>ต่อยอดสู่กระท่อมปลายนา หรือลานกางเต็นท์ในระยะที่ 3</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-2xl mb-4" style="color: var(--header-light);">กระแสเงินสด ระยะที่ 2 (ประมาณการต่อเดือน)</h4>
+                        <div class="p-6 rounded-lg" style="background-color: var(--bg-dominant);">
+                            <h5 class="text-xl font-semibold mb-2">รายได้ (ต่อเดือน)</h5>
+                            <p class="text-lg"><strong>นาคาเฟ่ (กาแฟ/อาหาร):</strong> ~60,000 บ.</p>
+                            <p class="text-lg"><strong>กิจกรรม (พายเรือ/ทัวร์):</strong> ~5,000 บ.</p>
+                            <p class="text-lg"><strong>แปรรูป/Farm Stand:</strong> ~15,000 บ.</p>
+                            <p class="text-lg font-bold">รวมรายได้: ~80,000 บ./เดือน</p>
+                        </div>
+                        <div class="p-6 rounded-lg mt-4" style="background-color: var(--bg-dominant);">
+                            <h5 class="text-xl font-semibold mb-2">ค่าใช้จ่าย (ต่อเดือน)</h5>
+                            <p class="text-lg">ต้นทุนวัตถุดิบ (COGS): ~32,000 บ. (40%)</p>
+                            <p class="text-lg">ค่าจ้าง Part-Time (เสาร์-อาทิตย์): ~12,000 บ.</p>
+                            <p class="text-lg">ค่าบำรุงรักษา/น้ำไฟ: ~8,000 บ.</p>
+                            <p class="text-lg">ค่าจ้างเหมา (ข้าว/ปลา-เฉลี่ยต่อเดือน): ~4,400 บ.</p>
+                            <p class="text-lg font-bold">รวมค่าใช้จ่าย: ~56,400 บ./เดือน</p>
+                        </div>
+                        <p class="text-center text-lg font-semibold mt-6 p-4 rounded" style="background-color: var(--bg-secondary);">
+                            สรุป (ปี 3-7): ฟาร์มมีกระแสเงินสดสุทธิ <strong style="color: var(--success-text);">~23,600 บ./เดือน</strong>
+                            <br>
+                            <strong style="color: var(--header-dark);">นี่คือเงินเดือนของเจ้าของโครงการ และใช้สำหรับบำรุงสวนส้มโอ</strong>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+             <!-- Phase 3 -->
+            <div class="phase-card mb-8">
+                <h3 class="text-4xl mb-6">ระยะที่ 3 (ปี 8-10): สร้างความมั่นคง</h3>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="text-2xl mb-4" style="color: var(--header-light);">ไทม์ไลน์กิจกรรม (ปี 8+)</h4>
+                        <div class="relative">
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <h5 class="text-xl font-semibold">เก็บเกี่ยวสินทรัพย์ (ส้มโอ)</h5>
+                                <p>ส้มโอ 5 ไร่ (175 ต้น) เริ่มให้ผลผลิตเต็มที่ สร้างรายได้ก้อนใหญ่ประจำปี</p>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <h5 class="text-xl font-semibold">จ้างงานเต็มเวลา</h5>
+                                <p>อาจต้องจ้างผู้ช่วย 1 คน (Full-Time) เพื่อช่วยดูแลคาเฟ่/กิจกรรม</p>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <h5 class="text-xl font-semibold">เพิ่มประสิทธิภาพ (Optimize)</h5>
+                                <p>พิจารณาเพิ่มโซนที่พัก (กระท่อมปลายนา) หรือขยายสาขาคาเฟ่</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-2xl mb-4" style="color: var(--header-light);">กระแสเงินสด ระยะที่ 3 (ประมาณการต่อปี)</h4>
+                        
+                        <div class="p-6 rounded-lg mt-4" style="background-color: var(--bg-dominant);">
+                            <h5 class="text-xl font-semibold mb-2">รายได้รวม (ต่อปี)</h5>
+                            <p class="text-lg"><strong>จากธุรกิจบริการ (คาเฟ่):</strong> ~283,200 บ. (23.6k x 12)</p>
+                            <p class="text-lg"><strong>จากสินทรัพย์ (ส้มโอ 5 ไร่):</strong> 175 ต้น x 100 ลูก x 20 บ. = <strong style="color: var(--success-text);">~350,000 บ./ปี</strong></p>
+                            <p class="text-lg"><strong>จากพืชรายปี (ข้าว/ปลา):</strong> <strong style="color: var(--success-text);">~53,600 บ./ปี</strong></p>
+                        </div>
+
+                        <p class="text-center text-lg font-semibold mt-6 p-4 rounded" style="background-color: var(--bg-secondary);">
+                            สรุป (ปี 8+): ฟาร์มสร้างรายได้รวม <strong style="color: var(--success-text);">~686,800 บ./ปี</strong>
+                            <br>
+                            <strong style="color: var(--header-dark);">มีรายได้จาก 2 แหล่งหลัก (บริการ + เกษตรกรรม) สร้างความมั่นคงระยะยาว</strong>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final Chart Section -->
+        <section id="final-chart" class="my-16">
+             <h2 class="text-4xl md:text-5xl text-center mb-10">การเติบโตของพอร์ตรายได้</h2>
+            <p class="text-center text-lg max-w-3xl mx-auto mb-12" style="color: var(--header-light);">
+                แผนภูมิแสดงการเปลี่ยนแปลงสัดส่วนรายได้ จากพืชระยะสั้น (ปี 1) สู่ธุรกิจบริการ (ปี 3) และเติบโตเต็มที่ด้วยสินทรัพย์ระยะยาว (ปี 8)
+            </p>
+            <div class="bar-chart-container">
+                <canvas id="revenueChart"></canvas>
+            </div>
+        </section>
+
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Budget Doughnut Chart
+            const budgetCtx = document.getElementById('budgetChart');
+            if (budgetCtx) {
+                new Chart(budgetCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: [
+                            '1. โครงสร้างน้ำ (สระ/บาดาล)', 
+                            '2. ระบบน้ำอัตโนมัติ', 
+                            '3. พืชระยะยาว (ส้มโอ)', 
+                            '4. พืชรายปี (ข้าว/ปลา)', 
+                            '5. พืชหมุนเวียน (กล้วย)'
+                        ],
+                        datasets: [{
+                            label: 'งบประมาณเริ่มต้น',
+                            data: [350000, 55000, 40000, 50000, 10000], // Total 505,000
+                            backgroundColor: [
+                                '#283618', // Dark Olive
+                                '#606c38', // Olive
+                                '#dda15e', // Terracotta
+                                '#a68a64', // Muted Brown
+                                '#f4f0e6'  // Light Beige
+                            ],
+                            borderColor: '#fdfaf6',
+                            borderWidth: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'การจัดสรรงบเริ่มต้น 505,000 บาท',
+                                font: { size: 16, family: "'Bai Jamjuree', 'Arimo', sans-serif" },
+                                color: var(--text-dark)
+                            },
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    font: { family: "'Bai Jamjuree', 'Arimo', sans-serif" }
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed !== null) {
+                                            label += new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB', minimumFractionDigits: 0 }).format(context.parsed);
+                                        }
+                                        return label;
+                                    },
+                                    title: function(tooltipItems) {
+                                        const item = tooltipItems[0];
+                                        let label = item.chart.data.labels[item.dataIndex];
+                                        if (Array.isArray(label)) {
+                                          return label.join(' ');
+                                        } else {
+                                          return label;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Revenue Bar Chart
+            const revenueCtx = document.getElementById('revenueChart');
+            if (revenueCtx) {
+                new Chart(revenueCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['ปีที่ 1 (รายได้รวม ~73.6k)', 'ปีที่ 3 (รายได้รวม ~336.8k)', 'ปีที่ 8 (รายได้รวม ~686.8k)'],
+                        datasets: [
+                            {
+                                label: 'พืชระยะสั้น (กล้วย, มะละกอ)',
+                                data: [24000, 24000, 0], // สมมติปี 8 เลิกปลูก
+                                backgroundColor: '#a68a64', // Muted Brown
+                            },
+                            {
+                                label: 'พืชรายปี (ข้าว, ปลา)',
+                                data: [53600, 53600, 53600],
+                                backgroundColor: '#606c38', // Olive
+                            },
+                            {
+                                label: 'ธุรกิจบริการ (คาเฟ่, กิจกรรม)',
+                                data: [0, 259200, 283200], // (23.6k-2k) * 12 // 23.6k*12
+                                backgroundColor: '#dda15e', // Terracotta
+                            },
+                            {
+                                label: 'พืชระยะยาว (ส้มโอ)',
+                                data: [0, 0, 350000],
+                                backgroundColor: '#283618', // Dark Olive
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                stacked: true,
+                                grid: { display: false }
+                            },
+                            y: {
+                                stacked: true,
+                                title: {
+                                    display: true,
+                                    text: 'ประมาณการรายได้ (บาท/ปี)'
+                                }
+                            }
+                        },
+                        plugins: {
+                             title: {
+                                display: true,
+                                text: 'การเติบโตและสัดส่วนรายได้ในแต่ละระยะ',
+                                font: { size: 16, family: "'Bai Jamjuree', 'Arimo', sans-serif" },
+                                color: var(--text-dark)
+                            },
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    font: { family: "'Bai Jamjuree', 'Arimo', sans-serif" }
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.y !== null) {
+                                             label += new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB', minimumFractionDigits: 0 }).format(context.parsed.y);
+                                        }
+                                        return " " + label;
+                                    },
+                                    title: function(tooltipItems) {
+                                        const item = tooltipItems[0];
+                                        let label = item.chart.data.labels[item.dataIndex];
+                                        if (Array.isArray(label)) {
+                                          return label.join(' ');
+                                        } else {
+                                          return label;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>
+
